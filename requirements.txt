@@ -1,0 +1,14 @@
+numpy
+scikit-learn
+pynput
+casadi
+argparse
+torch
+torchvision
+torchinfo
+pyyaml
+h5py
+warp-lang
+opencv-python
+trimesh
+collection

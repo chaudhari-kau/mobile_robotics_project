@@ -1,0 +1,41 @@
+## config files
+drone_config: 'hector_gazebo.yaml'
+camera_config: 'hector_camera.yaml'
+weight_file: 'inflated'
+logfile: '../logs/nmpc.log'
+horizon_logfile: '../logs/nmpc_horizon.log'
+
+## NMPC parameters
+N: 10  # Number of shooting nodes (as in the paper)
+T: 4.0  # Horizon length in seconds (as in the paper)
+size_latent: 128  # Size of latent representation
+control_loop_time: 20  # Minimum control period [ms] - for 100Hz control
+
+## Reference parameters
+zref: 1.5  # Desired hovering altitude (match the green ball)
+vref: 1.5  # Reference velocity [m/s]
+p_des:  # Destination (goal position)
+    - 9.0
+    - 0.0
+
+## Flags
+simulation: true
+use_depth: true  # Use depth images
+use_current_z: false
+use_hole_filling: true
+enable_colpred: true  # Enable collision prediction
+colpred_cost: true    # Use as cost function
+colpred_constraint: true  # Use as constraint
+
+## ROS topics for Hector quadrotor
+ros_topics:
+    depth_input: /depth_image
+    depth_output: /nmpc_colpred/processed_image
+    odom: /ground_truth/state
+    vel_cmd: /cmd_vel
+    vel_cmd_stamped: /nmpc_colpred/cmd_vel_stamped
+    traj_horizon: /nmpc_colpred/traj_horizon
+ros_srv:
+    start: /nmpc_colpred/startstop
+    goto: /nmpc_colpred/goto
+    flag: /nmpc_colpred/toggle_colpred

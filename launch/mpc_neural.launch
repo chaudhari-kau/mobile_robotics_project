@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Launch Gazebo with the paper corridor world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find mobile_robotics_project)/gazebo/paper_corridor.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+  
+  <!-- Spawn Hector Quadrotor at the start position -->
+  <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor_with_cam.launch">
+    <arg name="name" value="quadrotor"/>
+    <arg name="x" value="-8.0"/>
+    <arg name="y" value="-0.5"/>
+    <arg name="z" value="0.3"/>
+  </include>
+  
+  <!-- Launch improved image processing node -->
+  <node pkg="mobile_robotics_project" type="improved_image_processing.py" name="image_processor" output="screen">
+    <param name="camera_topic" value="/front_cam/camera/image"/>
+    <param name="depth_output_topic" value="/depth_image"/>
+  </node>
+  
+  <!-- Launch the MPC neural controller -->
+  <node pkg="mobile_robotics_project" type="mpc_neural_controller.py" name="mpc_neural_controller" output="screen" launch-prefix="bash -c 'sleep 5; $0 $@' ">
+  </node>
+</launch>
